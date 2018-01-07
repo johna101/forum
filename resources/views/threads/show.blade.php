@@ -24,10 +24,14 @@
                 <div class="form-group">
                     <textarea name="body" id="body" rows="5" class="form-control" placeholder="Have something to say?"></textarea>
                 </div>
-                <button type="submit">Post</button>
+                <button class="btn btn-primary" type="submit">Post</button>
             </form>
         </div>
-    </div>    
+    </div> 
+    <br>
+    @else
+      <div class="header text-center"><a href="/login">Login</a> to reply...</div>   
+      <br>
     @endauth
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
