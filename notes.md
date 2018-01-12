@@ -85,3 +85,102 @@ Make: Just makes the fields defined in the model factory, leaving out specifc DB
         body: "Minima eius deserunt aliquid cum et. Molestiae consequuntur consectetur et dolorem omnis unde non. Doloribus corrupti temporibus ratione. Est qui dicta dignissimos et ratione.",
    }
 ```
+
+## Raw v Make
+
+Raw returns an array of values, make returns an object
+
+`factory('App\Thread').raw()`
+
+```php
+>>> factory('App\Thread')->raw()
+=> [
+     "user_id" => 552,
+     "title" => "Libero aperiam quo repudiandae reprehenderit.",
+     "body" => "Placeat ut dolores exercitationem corporis debitis repellat. Rerum odit ea perferendis voluptates doloribus tenetur. Odio ut perferendis rerum inventore eos minima.",
+   ]
+
+
+>>> factory('App\Thread')->make()
+=> App\Thread {#788
+     user_id: 553,
+     title: "Ut voluptatibus ex voluptatem accusamus nemo.",
+     body: "Magni sapiente est vel cum beatae similique quis. Molestiae molestiae quidem ut minima nemo ab quis rerum.",
+   }
+```
+
+`Post` takes an array, so `Raw` is very useful if we're making an object to send in a post.
+
+If you have an object, use `toArray()` to manually cast.
+
+```php
+$thread->toArray();
+```
+
+## Ep 7: Test helpers
+
+Added the `'files` section to `composer.json`. This `functions.php` is only loaded while in dev.
+
+```json
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": ["tests/utilities/functions.php"]
+    },
+```
+
+Then in the file, we can make some helper methods.
+
+```php
+function create($class, $attributes = [])
+{
+    return factory($class)->create($attributes);
+}
+```
+
+After that, to get it to be recognised, we need to refresh the composer thingy
+
+```bash
+    $ composer dump-autoload
+```
+
+## Ep 8
+
+Resources look pretty interesting. You can do this..
+
+```php
+    Route::resource('\threads', 'ThreadsController');
+```
+
+instead of this...
+
+```php
+    Route::get('/threads', 'ThreadsController@Index');
+    Route::post('/threads', 'ThreadsController@store');
+    Route::get('/threads', 'ThreadsController@create');
+    Route::get('/threads/{thread}', 'ThreadsController@Show');
+```
+
+### From ThreadsController
+
+How to return a view. (Blade).
+This calls the file in `resources/views/threads` called `create.blade.php`
+
+```php
+    public function create()
+    {
+        return view('threads.create');
+    }
+
+```
+
+
+```php
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['store', 'create']);
+        // or this is simpler.
+        $this->middleware('auth')->except(['index', 'show']);
+    }
+```

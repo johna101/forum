@@ -10,15 +10,17 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/', function () {
     return view('welcome');
 });
+Auth::routes();
 
-Route::get('/threads', 'ThreadsController@Index');
-Route::get('/threads/{thread}', 'ThreadsController@Show');
+Route::get('/home', 'HomeController@index')->name('home');
 
+// Route::get('/threads', 'ThreadsController@Index');
+// Route::post('/threads', 'ThreadsController@store');
+// Route::get('/threads', 'ThreadsController@create');
+// Route::get('/threads/{thread}', 'ThreadsController@Show');
+Route::resource('threads', 'ThreadsController');
 Route::post('/threads/{thread}/replies', 'RepliesController@store'); 
