@@ -1,31 +1,65 @@
 <?php
-
+ 
 namespace App;
-
+ 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
+ 
 class Thread extends Model
 {
+    /**
+     * Don't auto-apply mass assignment protection.
+     *
+     * @var array
+     */
     protected $guarded = [];
-    function path() {
-        // return "/threads/$this->id";
-        return '/threads/' . $this->id;
-    }
-
-    public function replies()
+ 
+    /**
+     * Get a string path for the thread.
+     *
+     * @return string
+     */
+    public function path()
     {
-        return $this->HasMany(Reply::class);
+        return "/threads/{$this->channel->slug}/{$this->id}";
     }
-
+ 
+    /**
+     * A thread belongs to a creator.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function creator()
     {
-        return $this->belongsTo(User::class, 'user_id'); 
+        return $this->belongsTo(User::class, 'user_id');
+    }
+ 
+    /**
+     * A thread is assigned a channel.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
+ 
+    /**
+     * A thread may have many replies.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
     }
 
-    public function addReply($reply) 
-    { 
-        $this->replies()->create($reply); 
-    } 
-
+    /**
+     * Add a reply to the thread.
+     *
+     * @param $reply
+     */
+    public function addReply($reply)
+    {
+        $this->replies()->create($reply);
+    }
 }

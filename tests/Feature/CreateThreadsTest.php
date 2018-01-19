@@ -1,23 +1,38 @@
 <?php
-
+ 
 namespace Tests\Feature;
-
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+ 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-
+use Tests\TestCase;
+ 
 class CreateThreadsTest extends TestCase
 {
-   use DatabaseMigrations;
-    public function test_authenticated_user_can_create_forum_threads()
+    use DatabaseMigrations;
+ 
+    /** @test */
+    function test_guests_may_not_create_threads()
+    {
+        $this->withExceptionHandling();
+ 
+        $this->get('/threads/create')
+            ->assertRedirect('/login');
+ 
+        $this->post('/threads')
+            ->assertRedirect('/login');
+    }
+ 
+    /** @test */
+    function test_an_authenticated_user_can_create_new_forum_threads()
     {
         $this->signIn();
-
-        $thread = make('App\Thread');
+ 
+        $thread = create('App\Thread');
+ 
         $this->post('/threads', $thread->toArray());
-
+ 
         $this->get($thread->path())
-            ->assertSee($thread->title);
-
+            ->assertSee($thread->title)
+            ->assertSee($thread->body);
     }
 }
+ 

@@ -1,33 +1,34 @@
-<?php 
+<?php
  
-namespace Tests\Feature; 
+namespace Tests\Feature;
  
-use Illuminate\Foundation\Testing\DatabaseMigrations; 
-use Tests\TestCase; 
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
  
-class ParticipateInThreadsTest extends TestCase 
-{ 
-    use DatabaseMigrations; 
+class ParticipateInThreadsTest extends TestCase
+{
+    use DatabaseMigrations;
  
-    /** @test */ 
-    function test_unauthenticated_users_may_not_add_replies() 
-    { 
-        $this->expectException('Illuminate\Auth\AuthenticationException'); 
+    /** @test */
+    function test_unauthenticated_users_may_not_add_replies()
+    {
+        $this->withExceptionHandling()
+            ->post('/threads/some-channel/1/replies', [])
+            ->assertRedirect('/login');
+    }
  
-        $this->post('/threads/1/replies', []); 
-    } 
- 
-    /** @test */ 
-    function test_an_authenticated_user_may_participate_in_forum_threads() 
-    { 
-        $this->withoutExceptionHandling();
-        $this->be($user = factory('App\User')->create()); 
+    /** @test */
+    function test_an_authenticated_user_may_participate_in_forum_threads()
+    {
+        $this->signIn();
  
         $thread = create('App\Thread');
         $reply = make('App\Reply');
+
+        $this->post($thread->path() . '/replies', $reply->toArray());
  
-        $this->post($thread->path() . '/replies', $reply->toArray()); 
+        $this->get($thread->path())
+            ->assertSee($reply->body);
+    }
+}
  
-        $this->get($thread->path())->assertSee($reply->body); 
-    } 
-} 
