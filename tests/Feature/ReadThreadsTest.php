@@ -17,24 +17,28 @@ class ThreadsTest extends TestCase
         $this->thread = factory('App\Thread')->create();
     }
 
-    public function test_user_can_see_threads()
+    /** @test */
+    public function user_can_see_threads()
     {
         $response = $this->get('/threads');
         $response->assertSee($this->thread->title);
     }
 
-    public function test_user_can_see_single_thread()
+    /** @test */
+    public function user_can_see_single_thread()
     {
         $response = $this->get( $this->thread->path());
         $response->assertSee($this->thread->title);
     }
 
-    public function test_user_can_browse_threads()
+    /** @test */
+    public function user_can_browse_threads()
     {
         $response = $this->get('/threads');
         $response->assertStatus(200);
     }
 
+    /** @test */
     // public function test_user_can_see_replies()
     // {
     //     $reply = factory('App\Reply')

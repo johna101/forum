@@ -10,7 +10,7 @@ class ParticipateInThreadsTest extends TestCase
     use DatabaseMigrations;
  
     /** @test */
-    function test_unauthenticated_users_may_not_add_replies()
+    function unauthenticated_users_may_not_add_replies()
     {
         $this->withExceptionHandling()
             ->post('/threads/some-channel/1/replies', [])
@@ -18,7 +18,7 @@ class ParticipateInThreadsTest extends TestCase
     }
  
     /** @test */
-    function test_an_authenticated_user_may_participate_in_forum_threads()
+    function an_authenticated_user_may_participate_in_forum_threads()
     {
         $this->signIn();
  

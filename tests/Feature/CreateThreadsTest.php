@@ -10,7 +10,7 @@ class CreateThreadsTest extends TestCase
     use DatabaseMigrations;
  
     /** @test */
-    function test_guests_may_not_create_threads()
+    function guests_may_not_create_threads()
     {
         $this->withExceptionHandling();
  
@@ -22,7 +22,7 @@ class CreateThreadsTest extends TestCase
     }
  
     /** @test */
-    function test_an_authenticated_user_can_create_new_forum_threads()
+    function an_authenticated_user_can_create_new_forum_threads()
     {
         $this->signIn();
  
