@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use function foo\func;
+use App\Channel;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
             return app()->environment($nv);
 
         });
+
+        \View::share('channels', Channel::all());
     }
 
     /**
